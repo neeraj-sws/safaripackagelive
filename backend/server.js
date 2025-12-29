@@ -1,0 +1,76 @@
+const express = require("express");
+const axios = require("axios");
+const cors = require("cors");
+require("dotenv").config();
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+app.get("/postman-data", async (req, res) => {
+  try {
+    const response = await axios.get(
+      "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+    );
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch data" });
+  }
+});
+
+app.get("/public/species", async (req, res) => {
+  try {
+    console.log("Species API called");
+
+    const response = await axios.get(
+      `${process.env.API_BASE_URL}/public/species`
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch species data",
+    });
+  }
+});
+
+app.get("/public/species/bengal-tiger", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${process.env.API_BASE_URL}/public/species/bengal-tiger`
+    );
+    res.json(response.data);
+  } catch {
+    res.status(500).json({ message: "Failed to fetch species data" });
+  }
+});
+
+
+
+app.get("/public/species/tabs/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const response = await axios.get(
+      `${process.env.API_BASE_URL}/public/species/tabs/${id}`
+    );
+
+    res.json(response.data);
+
+  } catch (error) {
+    console.error("Species tabs API error:", error.message);
+    res.status(500).json({
+      success: false,
+      data: [],
+      message: "Failed to fetch species tabs"
+    });
+  }
+});
+
+
+
+
+
+app.listen(5000, () => {
+  console.log("Backend running at http://localhost:5000");
+});
