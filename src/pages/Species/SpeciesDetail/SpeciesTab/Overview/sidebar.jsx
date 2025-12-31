@@ -18,6 +18,26 @@ export default function sidebar() {
                                 Get Free Quotes
                             </h3>
                             <form>
+                                 <Row className=" gx-3">
+                                    <Col lg={12} sm={6} className=" mb-3">
+                                        <label className="form-label mb-1">
+                                            Name <span className="text-danger">*</span>
+                                        </label>
+                                        <input type="text" className="form-control"  placeholder="Enter your Name"/>
+                                    </Col>
+                                    <Col lg={12} sm={6} className=" mb-3">
+                                        <label className="form-label mb-1">
+                                            Email <span className="text-danger">*</span>
+                                        </label>
+                                        <input type="email" className="form-control" placeholder="Enter your Email" />
+                                    </Col>
+                                    <Col lg={12} sm={6} className=" mb-3">
+                                        <label className="form-label mb-1">
+                                            Number <span className="text-danger">*</span>
+                                        </label>
+                                        <input type="number" className="form-control"  placeholder="Enter your Number" />
+                                    </Col>
+                                </Row>
                                 {/* Safaris & Travelers  */}
                                 <Row className=" gx-3">
                                     <Col lg={12} sm={6} className=" mb-3">

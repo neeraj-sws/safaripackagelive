@@ -1078,7 +1078,7 @@ div#distance-table .table-striped>tbody>tr:nth-of-type(odd)>* {
 }
 
 .key-info-img img {
-    height: 180px;
+    height: 186px;
     aspect-ratio: 2/1;
     padding: 3px;
     object-fit: cover;

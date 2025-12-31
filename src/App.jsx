@@ -33,7 +33,7 @@ import Threats from './pages/Species/SpeciesDetail/SpeciesTab/Overview/Species-s
 import Interestingfacts from './pages/Species/SpeciesDetail/SpeciesTab/Overview/Species-subtabs/intresting-facts';
 import Lesserknownfacts from './pages/Species/SpeciesDetail/SpeciesTab/Overview/Species-subtabs/lesser-known-facts';
 import Conservationstatus from './pages/Species/SpeciesDetail/SpeciesTab/Overview/Species-subtabs/conservation-status';
-
+import TabRouter from './pages/Species/SpeciesDetail/SpeciesTab/Overview/tab-router';
 import Searchresult from './pages/Search Result/search-result';
 import Registration from './pages/auth/Registration';
 import AgencyRegistration from './pages/auth/Agency-registration'
@@ -70,35 +70,17 @@ function App() {
             <Route path="park-package" element={<Parkpackages />} />
             <Route path="park-safari" element={<Parksharedsafaris />} />
           </Route>
-          {/* species Detail Sub pages */}
-          {/* <Route path="/species/:id" element={<SpeciesDetail />}>
          
-            <Route index element={<Navigate to="overview" replace />} />
-
-         
-            <Route path="overview" element={<OverviewLayout />}>
-              <Route index element={<Overview />} />
-           
-              <Route path="physical-appereance-habitat" element={<Physicalappereancehabitat />} />
-              <Route path="threats" element={<Threats />} />
-               <Route path="interesting-facts" element={<Interestingfacts />} />
-               <Route path="lesser-known-facts" element={< Lesserknownfacts />} />
-               <Route path="conservation-status " element={< Conservationstatus />} />
-            </Route> */}
           {/* <Route path="/species/:slug" element={<SpeciesDetail />}> */}
           <Route path="/species/:id" element={<SpeciesDetail />} >
-            <Route index element={<Navigate to="overview" replace />} />
-
             <Route path="overview" element={<OverviewLayout />}>
-              <Route index element={<Overview />} />
-              {/* <Route path="" element={<Overview />} /> */}
-            </Route>
-
-
-            {/* MAIN TAB: Packages */}
+              <Route index element={<Navigate to="90/1" replace />}/>
+               {/* <Route path="90/1" element={<Overview />} />
+                <Route path="92/2" element={<Physicalappereancehabitat />} /> */}
+              <Route path=":tabId/:charId" element={<TabRouter />} />
+              {/* <Route path=":tabId" element={<Overview />} />  */}
+           </Route>
             <Route path="packages" element={<Packages />} />
-
-            {/* MAIN TAB: Shared Safaris */}
             <Route path="species-safaris" element={<Speciesafaris />} />
           </Route>
           <Route path="/search-result" element={< Searchresult />} />

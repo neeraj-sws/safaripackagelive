@@ -44,15 +44,19 @@ app.get("/public/species/bengal-tiger", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch species data" });
   }
 });
-
-
-
 app.get("/public/species/tabs/:id", async (req, res) => {
   try {
     const { id } = req.params;
-
+    
     const response = await axios.get(
-      `${process.env.API_BASE_URL}/public/species/tabs/${id}`
+      `${process.env.API_BASE_URL}/public/species/tabs/${id}`,
+
+      {
+      params: { 
+        species_characterstics,  
+        species_details_characterstics_id,
+    },
+  }
     );
 
     res.json(response.data);

@@ -6,13 +6,13 @@ import Placeholder from 'react-bootstrap/Placeholder';
 
 import { useNavigate } from "react-router-dom";
 
-const Speciesimage = ({species }) => {
+const Speciesimage = () => {
     const navigate = useNavigate();
 //     const goToSpeciesDetail = (id) => {
 //   navigate(`/species/${id}`);
 // };
 const goToSpeciesDetail = () => {
- const species_id = 23;
+const species_id = 23;
 //   navigate(`/species/${species.slug}`);
 navigate(`/species/${species_id}`);
 
