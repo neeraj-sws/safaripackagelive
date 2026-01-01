@@ -64,7 +64,7 @@ export default function parkpackages() {
                         <section id="join-shared-safari" className="mb-md--5 mb--3 pb--1">
                             <div className="card-container row align-items-center justify-content-start gx-3">
                                 <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <SafariCard >
+                                    <SafariCard>
 
                                         {/*<a href="#"
                                             class="btn btn-sm btn-primary blue-btn-hover border-0 rounded-1"

@@ -1,22 +1,72 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
-import VectorImg from '../../assets/images/Vector.png';
-import animalCardImg from '../../assets/images/animal-images/card-img.png';
-import IconsPermitImg from '../../assets/images/icons/permit.svg';
-import IconsAccommodationImg from '../../assets/images/icons/accommodation.svg';
-import IconsmealsImg from '../../assets/images/icons/meals.svg';
-import IconsguideImg from '../../assets/images/icons/guide.svg';
+// import VectorImg from '../../assets/images/Vector.png';
+// import animalCardImg from '../../assets/images/animal-images/card-img.png';
+// import IconsPermitImg from '../../assets/images/icons/permit.svg';
+// import IconsAccommodationImg from '../../assets/images/icons/accommodation.svg';
+// import IconsmealsImg from '../../assets/images/icons/meals.svg';
+// import IconsguideImg from '../../assets/images/icons/guide.svg';
 import { Link } from "react-router-dom";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-
+import api from '../../api/api';
 export default function SafariCard() {
+    const [list, setList] = useState([]);
+    const [tabs, setTabs] = useState([]);
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+    const PER_PAGE = 9;
+    //    const lastPage = 794; // API se aata hai
+    const visibleCount = 3;
+
+    useEffect(() => {
+        api.get("/public/shared-safari", {
+            params: {
+                page: page,
+                per_page: PER_PAGE
+            }
+        })
+            .then(res => {
+                setTabs(res.data?.data || []);
+                setLastPage(res.data?.last_page || 1);
+            })
+            .catch(err => {
+                console.error("API ERROR:", err);
+                setTabs([]);
+            });
+    }, [page]);
+
+    useEffect(() => {
+        const temp = [];
+
+        for (let i = 0; i < list.length; i++) {
+            temp.push(list[i]);
+        }
+
+        setTabs(temp);
+    }, [list]);
+
+    const getPageNumbers = () => {
+        let start = Math.max(1, page - 1);
+        let end = start + visibleCount - 1;
+
+        if (end > lastPage) {
+            end = lastPage;
+            start = Math.max(1, end - visibleCount + 1);
+        }
+
+        const pages = [];
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+        return pages;
+    };
 
     const location = useLocation();
     const navigate = useNavigate();
-    const { userId } = useParams()
+
     let showButton = false;
     let buttonText = "";
     let navigateTo = "";
@@ -28,13 +78,13 @@ export default function SafariCard() {
             navigateTo = "/SafariDetail";
             break;
 
-        case "/Sharedsafari":
+        case "/join-shared-safari":
             showButton = true;
-            buttonText = "Join Safari";
+            buttonText = " View Detail ";
             navigateTo = "/SafariDetail";
             break;
 
-        case "/Safaripackages":
+        case "/safari-packages":
             showButton = true;
             buttonText = "Enquire Now";
             navigateTo = "/PackagesDetail";
@@ -59,15 +109,10 @@ export default function SafariCard() {
             buttonText = "Enquire ";
             navigateTo = "/PackagesDetail";
     }
-    //  console.log(location.pathname);
-    // const pathSegments = location.pathname.split('/Sharedsafari');
-    // console.log(pathSegments);
     const currentPath = location.pathname;
-
-    // const parts = location.pathname.split("/").filter(Boolean);
     const { pathname } = location;
 
-    if (pathname === "/species-detail/packages") {
+    if (pathname === `/species-detail/packages`) {
         showButton = true;
         buttonText = "Enquire Now";
         navigateTo = "/PackagesDetail";
@@ -89,121 +134,101 @@ export default function SafariCard() {
         buttonText = "Join Safari";
         navigateTo = "/SafariDetail";
     }
+    const bestTime = location.pathname === "/safari-packages";
     return (
         <>
             {/* Join Shared Safari Section  */}
+            {tabs.length === 0 && <p>No data found</p>}
 
-            <Card className=" rounded-3" id="Card_Img">
-                {/* Card Image  */}
-                <img className="card-img-top rounded-top-3" src={animalCardImg}
-                    alt="Card image" />
-                <Card.Body className=" p-0">
-                    <div className="card-body-inner border-bottom">
-                        <div className="card-title border-bottom pb-1">
-                            <div className="d-flex align-items-center justify-content-between">
-                                <h4 className="mb-0 card-text">
-                                    Ranthambore Tiger Safari
-                                </h4>
-                                <div className="count-days px-2 rounded-1">
-                                    <span className="text-white">3N/4D</span>
+            {tabs.map((item, index) => (
+                <Col xl={4} sm={6} className=" join-safari-card-box mt-3 rounded-3" key={index}>
+                    <Card className=" rounded-3" id="Card_Img">
+                        {/* Card Image  */}
+                        <img className="card-img-top rounded-top-3" src={item.display_image}
+                            alt="Card image" style={{ width: "100%", objectFit: "cover", height: "220px" }} />
+                        <Card.Body className="p-0 border-bottom">
+
+                            <div className="card-body-inner border-bottom p-0">
+                                <div className="card-title border-bottom p-2">
+                                    <div className="d-flex align-items-center justify-content-between">
+                                        <h4 className="mb-0 card-text">
+                                            {item.slug}
+                                        </h4>
+                                    </div>
+                                    <div className="cityplace-text">
+                                        <span>
+                                            {item.park.name.length > 30
+                                                ? item.park.name.slice(0, 30) + "..."
+                                                : item.park.name}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="card-text p-2">
+                                    {/* Highlights partition  */}
+                                    <div className="d-flex justify-content-between">
+                                        <div className="text-center">
+                                            <p className="mb-0 total-safari">safari</p>
+                                            <p className="mb-0 total-safari-in-number">{item.no_of_safari}</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <p className="mb-0 total-seat">Seats</p>
+                                            <p className="mb-0 total-seat-in-number">{item.share_seats}</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <p className="mb-0 organizer">Organized by</p>
+                                            <p className="mb-0 organizer_name"></p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="cityplace-text">
-                                <span>Ranthambore Tiger Reserve, Rajasthan</span>
-                            </div>
-                        </div>
-                        <div className="card-text knowfor-list-home">
-                            {/* Highlights partition  */}
-                            <div>
-                                <ul
-                                    className="highlights highlights-grid knowfor-list ps-0 d-flex flex-wrap align-items-center">
-                                    <li className="card-list-text d-flex align-items-center gap-1 mb-md-0 mb-0">
-                                        <img src={IconsPermitImg} alt="Safari Permit" />
-                                        <p className="mb-0">Safari Permits</p>
-                                    </li>
-                                    <li className="card-list-text d-flex align-items-center gap-1 mb-md-0 mb-0">
-                                        <img src={IconsAccommodationImg} alt="Accommodation" />
-                                        <p className="mb-0">Accommodation</p>
-                                    </li>
-                                    <li className="card-list-text d-flex align-items-center gap-1 mb-md-0 mb-0">
-                                        <img src={IconsmealsImg} alt="Meals" />
-                                        <p className="mb-0">Meals</p>
-                                    </li>
-                                    <li className="card-list-text d-flex align-items-center gap-1 mb-md-0 mb-0">
-                                        <img src={IconsguideImg} alt="Guide" />
-                                        <p className="mb-0">Guide</p>
-                                    </li>
-                                </ul>
-                            </div>
-                            {/* Known for partition  */}
-                            <div className="knowfor-list mt-1 mb-1">
-                                <h6 className="mb-0">Known For:</h6>
-                            </div>
-                            <ul
-                                className="highlights highlights-grid knowfor-list ps-0 d-flex flex-wrap align-items-center">
-                                <li className="card-list-text d-flex align-items-center gap-1 mb-md-0 mb-0">
-                                    <i className="fa fa-circle" aria-hidden="true"></i>
-                                    <p className="mb-0">Tiger</p>
-                                </li>
-                                <li className="card-list-text d-flex align-items-center gap-1 mb-md-0 mb-0">
-                                    <i className="fa fa-circle" aria-hidden="true"></i>
-                                    <p className="mb-0">Sloth Bear</p>
-                                </li>
-                                <li className="card-list-text d-flex align-items-center gap-1 mb-md-0 mb-0">
-                                    <i className="fa fa-circle" aria-hidden="true"></i>
-                                    <p className="mb-0">Dhole</p>
-                                </li>
-                                <li className="card-list-text d-flex align-items-center gap-1 mb-md-0 mb-0">
-                                    <i className="fa fa-circle" aria-hidden="true"></i>
-                                    <p className="mb-0">Barasingha</p>
-                                </li>
-                            </ul>
-
-                            {/* Availability partition  */}
-                            <div className="knowfor-list mt-1 mb-1">
-                                <h6 className="mb-0">Availability:</h6>
-                            </div>
-                            <div
-                                className="highlights highlights-grid d-flex align-items-center flex-wrap column-gap-2">
-                                <div
-                                    className="card-list-text d-flex align-items-md-center align-items-start gap-1 mb-md-0 mb-2">
-                                    <i className="fa fa-circle" aria-hidden="true"></i>
-                                    <p className="mb-0">Safari: 5</p>
+                            <div className="card-body-inner price-container flex-wrap p-0">
+                                <div className="starting-price d-flex align-items-center justify-content-between border-bottom p-2">
+                                    <p className="mb-0"> Price:</p>
+                                    <span className="mb-0 text-muted">₹{item.min_price_pp}-₹{item.max_price_pp}</span>
                                 </div>
-                                <div
-                                    className="card-list-text d-flex align-items-md-center align-items-start gap-1 mb-md-0 mb-2">
-                                    <i className="fa fa-circle" aria-hidden="true"></i>
-                                    <p className="mb-0">Seats: 5</p>
+                                <div className=" my-2 pb-1 text-center">
+                                    {showButton && (
+                                        <button
+                                            style={{ fontSize: "14px" }}
+                                            onClick={() => navigate(navigateTo)}
+                                            className="btn-sm btn-primary blue-btn-hover border-0 rounded-1" >
+                                            {buttonText}
+                                        </button>
+                                    )}
                                 </div>
                             </div>
-                        </div>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            ))}
+            {!bestTime &&(
+            <Col xs={12} className=" d-flex justify-content-center align-items-center mt-4 pt-2 gap-2" wire:key="pagination">
+                <button
+                    className=" prev-btn btn-sm "
+                    disabled={page === 1}
+                    onClick={() => setPage(p => p - 1)}>
+                    <i className="fas fa-chevron-left"></i> Previous
+                </button>
+                {getPageNumbers().map(num => (
+                    <button
+                        key={num}
+                        className={`page-btn page btn-sm  ${page === num ? "disabled" : ""}`}
+                        // className={page === num ? " active" : ""}
+                        onClick={() => setPage(num)}
+                    >
+                        {num}
+                    </button>
+                ))}
 
 
-
-                    </div>
-                    <div
-                        className="d-flex align-items-center justify-content-between card-body-inner py-2 price-container flex-wrap">
-                        <div className="starting-price">
-                            <p className="mb-0">Starting Price:</p>
-                            <span className="mb-0 text-muted">₹ 22,750</span>
-                        </div>
-                        {showButton && (
-                            <button
-                                onClick={() => navigate(navigateTo)}
-                                className="btn-sm btn-primary blue-btn-hover border-0 rounded-1" >
-                                {buttonText}
-                            </button>
-                        )}
-                        {/* {showButton && (
-                            // <button onClick={() => navigate(navigateTo)} className="btn-sm btn-primary blue-btn-hover border-0 rounded-1">
-                            <button onClick={() => navigate(navigateTo)} className="btn-sm btn-primary blue-btn-hover border-0 rounded-1">
-                                {buttonText}
-                            </button>
-                        )} */}
-                    </div>
-                </Card.Body>
-            </Card>
-
+                <button
+                    className="page next-btn btn-sm "
+                    disabled={page === lastPage}
+                    onClick={() => setPage(p => p + 1)}>
+                    Next<i className="fas fa-chevron-right"></i>
+                </button>
+            </Col>
+            )}
         </>
     );
 

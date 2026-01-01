@@ -29,17 +29,17 @@ export default function joinSharedSafari() {
                     </div>
                     <div className="card-container row align-items-center justify-content-between gx-3">
 
-                        <Col lg={4} sm={6} className="join-safari-card-box mb-3 px-2 rounded-3">
+                        {/* <Col lg={4} sm={6} className="join-safari-card-box mb-3 px-2 rounded-3"> */}
                             <SafariCard />
+                        {/* </Col> */}
+                        {/* <Col lg={4} sm={6} className="join-safari-card-box mb-3 px-2 rounded-3">
+                            <SafariCard />
+
                         </Col>
                         <Col lg={4} sm={6} className="join-safari-card-box mb-3 px-2 rounded-3">
                             <SafariCard />
 
-                        </Col>
-                        <Col lg={4} sm={6} className="join-safari-card-box mb-3 px-2 rounded-3">
-                            <SafariCard />
-
-                        </Col>
+                        </Col> */}
 
                     </div>
                 </div>

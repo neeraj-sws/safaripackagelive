@@ -51,7 +51,7 @@ export default function SafariDeals() {
     const topSafari = [];
     for (let i = 0; i < 8; i++) {
         topSafari.push(
-            <div className="item Lion" key={i} style={{width:"315.083px", marginRight:"10px"}}>
+            <div className="item Lion" key={i} style={{ marginRight:"10px"}}>
                 <div className="owl-slide text-center mx-auto">
                     <div className="card park-card border-0 shadow-sm position-relative overflow-hidden">
                         <img src={animalLionImg} className="top_rated img-fluid"

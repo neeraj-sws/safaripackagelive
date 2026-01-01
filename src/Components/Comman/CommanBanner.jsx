@@ -17,7 +17,7 @@ const routeConfig = {
     showButton: true,
     buttonText: "Join Safari",
   },
-  "/Sharedsafari": {
+  "/join-shared-safari": {
     showButton: true,
     buttonText: "Join or Organize a Shared Safari",
   },

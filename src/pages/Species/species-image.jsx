@@ -13,7 +13,6 @@ const Speciesimage = () => {
 // };
 const goToSpeciesDetail = () => {
 const species_id = 23;
-//   navigate(`/species/${species.slug}`);
 navigate(`/species/${species_id}`);
 
 };

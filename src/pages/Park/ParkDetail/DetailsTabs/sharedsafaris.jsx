@@ -5,7 +5,6 @@ import Aside from '../../../../Components/Comman/aside';
 
 
 export default function parksharedsafaris() {
-    // const [activeTab, setActiveTab] = useState("");
    
     return (
         <>
@@ -29,7 +28,7 @@ export default function parksharedsafaris() {
                                         </select>
 
                                     </div>
-                                    {/* Filter Toggle Button (Visible on Mobile)  */}
+                                 
                                     <div className="d-lg-none">
                                         <button className="btn" id="openFilter">
                                             <svg className="me-1 small" xmlns="http://www.w3.org/2000/svg" height="24px"
@@ -98,7 +97,7 @@ export default function parksharedsafaris() {
                             </div>
                         </section>
 
-                        {/* Top Rated Park   */}
+                       
                        
                     </Col>
                 </Row>

@@ -103,12 +103,12 @@ export default function ParkGuides() {
                                 </div>
 
 
-                                <div className="col-12 text-center mt-4 pt-2">
+                                {/* <div className="col-12 text-center mt-4 pt-2">
                                     <a href="javascript:void(0)"
                                         className="text-decoration-none btn-primary blue-btn-hover rounded-1 btn-sm border-0 px-3">
                                         Load More
                                     </a>
-                                </div>
+                                </div> */}
                             </div>
                         </section>
 

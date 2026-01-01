@@ -4,20 +4,23 @@ import { Nav } from "react-bootstrap";
 import { NavLink, Outlet, useParams } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Sepciesrated from "../../../Species/SpeciesDetail/SpeciesTab/species-rated";
+const navLinkStyles = ({ isActive }) => ({
+    color: isActive ? '#f27a3b' : ' #1D4358',
+});
 export default function speciestabs() {
     const { id } = useParams();
     const [tabs, setTabs] = useState([]);
 
     useEffect(() => {
-       api.get(`/public/species/bengal-tiger`)
-  .then(res => {
-    const details = res.data?.data?.characterstic_details || [];
-    setTabs(details);
-  })
-  .catch(error => {
-    console.error("API ERROR:", error);
-    setTabs([]);
-  });
+        api.get(`/public/species/bengal-tiger`)
+            .then(res => {
+                const details = res.data?.data?.characterstic_details || [];
+                setTabs(details);
+            })
+            .catch(error => {
+                console.error("API ERROR:", error);
+                setTabs([]);
+            });
     }, []);
     return (
         <>
@@ -28,11 +31,16 @@ export default function speciestabs() {
                         <Nav variant="pills" className="main-tabs flex-nowrap  gap-2" >
 
                             <NavLink to={`/species/${id}/overview`}
-                                className="fw-semibold bg-white nav-link">
+                                // className="fw-semibold bg-white nav-link" style={navLinkStyles}
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "nav-link active"
+                                        : "nav-link fw-semibold bg-white"
+                                }>
                                 Overview
                             </NavLink>
                             <NavLink to={`/species/${id}/packages`}
-                                className="fw-semibold rounded-pill nav-link">
+                                className="fw-semibold rounded-pill nav-link" style={navLinkStyles}>
                                 Packages
                             </NavLink>
                             <NavLink to={`/species/${id}/species-safaris`}

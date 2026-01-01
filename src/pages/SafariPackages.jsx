@@ -78,37 +78,15 @@ export default function SafariPackages() {
                         </div>
                         <section id="join-shared-safari" className="mb-md--5 mb--3 pb--1">
                             <div className="card-container row align-items-center justify-content-start gx-3">
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <SafariCard />
-                                </div>
+                                  <SafariCard />
 
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <SafariCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <SafariCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <SafariCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <SafariCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <SafariCard />
-                                </div>
-
-
-                                <div className="col-12 text-center mt-4 pt-2">
+                              
+                                {/* <div className="col-12 text-center mt-4 pt-2">
                                     <a href="javascript:void(0)"
                                         className="text-decoration-none btn-primary blue-btn-hover btn btn-sm border-0 px-3">
                                         Load More
                                     </a>
-                                </div>
+                                </div> */}
                             </div>
                         </section>
 

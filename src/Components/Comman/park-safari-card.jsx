@@ -11,13 +11,6 @@ import IconsmealsImg from '../../assets/images/icons/meals.svg';
 import IconsguideImg from '../../assets/images/icons/guide.svg';
 import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
-import '../../css/style.css';
-import '../../css/common.css';
-import '../../css/responsive.css';
-import '../../css/full-forms.css';
-import '../../css/all-form.css';
-import '../../css/listingpages.css';
-import '../../css/package-listing-detail.css';
 
 export default function SafariCard() {
 

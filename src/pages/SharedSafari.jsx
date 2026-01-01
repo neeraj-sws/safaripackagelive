@@ -1,4 +1,5 @@
-import React from 'react';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
 import Header from '../Components/Layout/Header';
@@ -6,19 +7,24 @@ import Footer from '../Components/Layout/Footer';
 import SafariCard from '../Components/Comman/SafariCard';
 import Aside from '../Components/Comman/aside';
 import TopRated from '../Components/Comman/TopRated';
-import '../css/style.css';
-import '../css/responsive.css';
-import '../css/full-forms.css';
-import '../css/all-form.css';
-import '../css/listingpages.css';
-import '../css/package-listing-detail.css';
 import CommanBanner from "../Components/Comman/CommanBanner";
-
+import api from '../api/api';
 export default function SharedSafari() {
-       
-    //  if(EnquireNow){
 
-    //  }
+    //  const { slug } = useParams()
+    // const [tabs, setTabs] = useState([]);
+    //  const [safari, setSafari] = useState(null);
+
+    //   useEffect(() => {
+    //     api.get("/public/shared-safari")
+    //       .then(res => {
+    //         setSafari(res.data.data[0]); // 👈 slug yahin se
+    //         // console.log("Slug from API:", res.data.data[0].slug);
+    //       })
+    //       .catch(console.error);
+    //   }, []);
+
+    //   if (!safari) return <p>Loading...</p>;
 
     return (
         <>
@@ -36,12 +42,12 @@ export default function SharedSafari() {
                         <div className="filter-applied-container">
                             <div className="d-sm-flex align-items-center justify-content-between mb-2 flex-wrap">
                                 <div className="what's-found mb-lg-0 mb-3">
-                                    <p className="mb-0">We found <b>3</b> Active Shared Safari</p>
+                                    <p className="mb-0">We found <b>7937</b> Active Shared Safari</p>
                                 </div>
                                 <div className="d-lg-inline-block d-flex align-items-center justify-content-between mb-3">
                                     <div className="sort-by mb-sm-0">
-                                      
-                                        <select className="form-select custom-dropdown" defaultValue="popular">
+                                        <select className="form-select custom-dropdown" defaultValue="all">
+                                            <option value="all">All</option>
                                             <option value="popular">Popular</option>
                                             <option value="latest">Latest</option>
                                             <option value="trending">Trending</option>
@@ -55,7 +61,8 @@ export default function SharedSafari() {
                                                 viewBox="0 -960 960 960" width="24px" fill="var(--text-dark)">
                                                 <path
                                                     d="M440-120v-240h80v80h320v80H520v80h-80Zm-320-80v-80h240v80H120Zm160-160v-80H120v-80h160v-80h80v240h-80Zm160-80v-80h400v80H440Zm160-160v-240h80v80h160v80H680v80h-80Zm-480-80v-80h400v80H120Z" />
-                                            </svg></button>
+                                            </svg>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -81,8 +88,12 @@ export default function SharedSafari() {
                             </div>
                         </div>
                         <section id="join-shared-safari" className="mb-md--5 mb--3 pb--1">
-                            <div className="card-container row align-items-center justify-content-start gx-3">
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
+                            <div className="card-container row align-items-center  gx-3">
+                                {/* <Col xl={4} sm={6} className=" join-safari-card-box mt-3 rounded-3"> */}
+                                <SafariCard />
+                                {/* </Col> */}
+
+                                {/* <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
                                     <SafariCard />
                                 </div>
 
@@ -100,24 +111,20 @@ export default function SharedSafari() {
 
                                 <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
                                     <SafariCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <SafariCard />
-                                </div>
+                                </div> */}
 
 
-                                <div className="col-12 text-center mt-4 pt-2">
+                                {/* <div className="col-12 text-center mt-4 pt-2">
                                     <a href="javascript:void(0)"
                                         className="text-decoration-none btn-primary blue-btn-hover rounded-1 btn-sm border-0 px-3">
                                         Load More
                                     </a>
-                                </div>
+                                </div> */}
                             </div>
                         </section>
 
                         {/* Top Rated Park   */}
-                        <TopRated/>
+                        <TopRated />
                     </Col>
                 </Row>
             </div>

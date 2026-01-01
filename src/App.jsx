@@ -27,7 +27,7 @@ import Packages from './pages/Species/SpeciesDetail/SpeciesTab/species-packages'
 import Speciesafaris from './pages/Species/SpeciesDetail/SpeciesTab/sharedsafaris';
 //Overview Sub Pages
 import OverviewLayout from "./pages/Species/SpeciesDetail/SpeciesTab/Overview/overview-layout";
-import Overview from "./pages/Species/SpeciesDetail/SpeciesTab/Overview/Species-subtabs/overview";
+import Overview from "./pages/Species/SpeciesDetail/SpeciesTab/Overview/overview-layout";
 import Physicalappereancehabitat from './pages/Species/SpeciesDetail/SpeciesTab/Overview/Species-subtabs/physical-appereance-habitat';
 import Threats from './pages/Species/SpeciesDetail/SpeciesTab/Overview/Species-subtabs/threats';
 import Interestingfacts from './pages/Species/SpeciesDetail/SpeciesTab/Overview/Species-subtabs/intresting-facts';
@@ -55,8 +55,8 @@ function App() {
         <Routes>
           {/* <Route element={<Layout />}></Route> */}
           <Route path="/" element={<Home />} />
-          <Route path="/Safaripackages" element={<SafariPackages />} />
-          <Route path="/Sharedsafari" element={<SharedSafari />} />
+          <Route path="/safari-packages" element={<SafariPackages />} />
+          <Route path="/join-shared-safari" element={<SharedSafari />} />
           <Route path="/Parkguides" element={<ParkGuides />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
@@ -73,12 +73,12 @@ function App() {
          
           {/* <Route path="/species/:slug" element={<SpeciesDetail />}> */}
           <Route path="/species/:id" element={<SpeciesDetail />} >
-            <Route path="overview" element={<OverviewLayout />}>
-              <Route index element={<Navigate to="90/1" replace />}/>
+            <Route path="overview/*" element={<OverviewLayout />}>
+             <Route index element={<Navigate to="90/1" replace />} />
+              {/* <Route index element={<Navigate to="overview" replace />}/> */}
                {/* <Route path="90/1" element={<Overview />} />
                 <Route path="92/2" element={<Physicalappereancehabitat />} /> */}
               <Route path=":tabId/:charId" element={<TabRouter />} />
-              {/* <Route path=":tabId" element={<Overview />} />  */}
            </Route>
             <Route path="packages" element={<Packages />} />
             <Route path="species-safaris" element={<Speciesafaris />} />

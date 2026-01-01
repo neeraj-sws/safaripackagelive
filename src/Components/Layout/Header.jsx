@@ -5,7 +5,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import Dropdown from 'react-bootstrap/Dropdown';
 import safariLogoImg from '../../assets/images/safari-logo.png';
 
-import {  Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import userImg from '../../assets/images/user.png'
 import '../../css/style.css';
 import '../../css/common.css';
@@ -34,15 +34,15 @@ export default function Header() {
 
                         <Navbar.Collapse id="safariNavbar">
                             <Nav className="ms-auto mb-2 mb-lg-0 align-items-center gap-2">
-                                <NavLink to="/Sharedsafari"  className='nav-link' style={navLinkStyles}>Shared Safari</NavLink>
-                                <NavLink  to="/Safaripackages"  className='nav-link' style={navLinkStyles}>Safari Packages</NavLink>
-                                <NavLink to="/species"  className='nav-link' style={navLinkStyles}>Species</NavLink>
-                                <NavLink to="/Parkguides"  className='nav-link' style={navLinkStyles}>Park Guides</NavLink>
-                                <NavLink to="/contact"  className='nav-link' style={navLinkStyles}>Contact</NavLink>
-                                <NavLink to="/create-shared-tour"  className='nav-link create-tour' style={navLinkStyles}>Create Shared Tour</NavLink>
+                                <NavLink to="/join-shared-safari"className= "nav-link" style={navLinkStyles}>Shared Safari</NavLink>
+                                <NavLink to="/safari-packages" className= "nav-link" style={navLinkStyles}>Safari Packages</NavLink>
+                                <NavLink to="/Parkguides" className='nav-link' style={navLinkStyles}>Park Guides</NavLink>
+                                <NavLink to="/species" className='nav-link' style={navLinkStyles}>Species</NavLink>
+                                <NavLink to="/contact" className='nav-link' style={navLinkStyles}>Contact</NavLink>
+                                <NavLink to="/create-shared-tour" className='nav-link create-tour' style={navLinkStyles}>Create Shared Tour</NavLink>
                                 <Dropdown>
-                                    <Dropdown.Toggle  id="dropdown-basic" role="button" aria-expanded="false" style={{borderRadius:"50%"}} className="nav-link profile-icon">
-                                        <img src={userImg} alt="User" style={{width: "30px", height: "30px"}}/>
+                                    <Dropdown.Toggle id="dropdown-basic" role="button" aria-expanded="false" style={{ borderRadius: "50%" }} className="nav-link profile-icon">
+                                        <img src={userImg} alt="User" style={{ width: "30px", height: "30px" }} />
                                     </Dropdown.Toggle>
 
                                     <Dropdown.Menu className="dropdown-menu-end">
