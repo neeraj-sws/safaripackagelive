@@ -1,15 +1,18 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import Header from '../../Components/Layout/Header';
 import Footer from '../../Components/Layout/Footer';
 import ParkCard from '../../Components/Comman/park-safari-card';
 import Aside from '../../Components/Comman/aside';
 import TopRated from '../../Components/Comman/TopRated';
 import CommanBanner from "../../Components/Comman/CommanBanner";
-
+import { useParams } from "react-router-dom";
 export default function ParkGuides() {
 
+// const { speciesId } = useParams(); // 🔥 dynamic, URL clean
+
+  
     return (
         <>
             <div>
@@ -21,12 +24,12 @@ export default function ParkGuides() {
             {/* Join Shared Safari Section  */}
             <div className="container-lg container-inner-padding">
                 <Row className=" g-3 position-relative mb-5" style={{ minHeight: "100vh" }}>
-                    <Aside />
+                    <Aside/>
                     <Col xs={12} lg={9} className=" main-content-scroll">
                         <div className="filter-applied-container">
                             <div className="d-sm-flex align-items-center justify-content-between mb-2 flex-wrap">
                                 <div className="what's-found mb-lg-0 mb-3">
-                                    <p className="mb-0">We found <b>3</b> Active Shared Safari</p>
+                                    <p className="mb-0">We found <b>6</b> Active Shared Safari</p>
                                 </div>
                                 <div className="d-lg-inline-block d-flex align-items-center justify-content-between mb-3">
                                     <div className="sort-by mb-sm-0">
@@ -77,39 +80,10 @@ export default function ParkGuides() {
                             </div>
                         </div>
                         <section id="join-shared-safari" className="mb-md--5 mb--3 pb--1">
-                            <div className="card-container row align-items-center justify-content-start gx-3">
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <ParkCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <ParkCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <ParkCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <ParkCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <ParkCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <ParkCard />
-                                </div>
-
-
-                                {/* <div className="col-12 text-center mt-4 pt-2">
-                                    <a href="javascript:void(0)"
-                                        className="text-decoration-none btn-primary blue-btn-hover rounded-1 btn-sm border-0 px-3">
-                                        Load More
-                                    </a>
-                                </div> */}
-                            </div>
+                            <Row className="card-container row align-items-center justify-content-start gx-3">
+                                <ParkCard />
+                               
+                            </Row>
                         </section>
 
                         {/* Top Rated Park   */}

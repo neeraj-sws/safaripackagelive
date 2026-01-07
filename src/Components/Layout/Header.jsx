@@ -36,7 +36,7 @@ export default function Header() {
                             <Nav className="ms-auto mb-2 mb-lg-0 align-items-center gap-2">
                                 <NavLink to="/join-shared-safari"className= "nav-link" style={navLinkStyles}>Shared Safari</NavLink>
                                 <NavLink to="/safari-packages" className= "nav-link" style={navLinkStyles}>Safari Packages</NavLink>
-                                <NavLink to="/Parkguides" className='nav-link' style={navLinkStyles}>Park Guides</NavLink>
+                                <NavLink to="/park-guides" className='nav-link' style={navLinkStyles}>Park Guides</NavLink>
                                 <NavLink to="/species" className='nav-link' style={navLinkStyles}>Species</NavLink>
                                 <NavLink to="/contact" className='nav-link' style={navLinkStyles}>Contact</NavLink>
                                 <NavLink to="/create-shared-tour" className='nav-link create-tour' style={navLinkStyles}>Create Shared Tour</NavLink>
