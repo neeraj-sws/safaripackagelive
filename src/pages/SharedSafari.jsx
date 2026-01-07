@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
 import Header from '../Components/Layout/Header';
@@ -9,23 +9,115 @@ import Aside from '../Components/Comman/aside';
 import TopRated from '../Components/Comman/TopRated';
 import CommanBanner from "../Components/Comman/CommanBanner";
 import api from '../api/api';
-export default function SharedSafari() {
+const SharedSafari = () => {
+    const [selectedState, setSelectedState] = useState(null);
+    const [selectedPark, setSelectedPark] = useState(null);
+    const [selectedSpecies, setSelectedSpecies] = useState(null);
+    const [totalCount, setTotalCount] = useState(0);
+    const [cards, setCards] = useState([]);
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
 
-    //  const { slug } = useParams()
-    // const [tabs, setTabs] = useState([]);
-    //  const [safari, setSafari] = useState(null);
+    const fetchSafaris = async (pageNo = 1, stateId = null, parkId = null, speciesId = null) => {
+        try {
+            const res = await api.get("/public/shared-safari", {
+                params: {
+                    page: pageNo,
+                    stateSelect: stateId || undefined,
+                    parkSelect: parkId || undefined,
+                    speciesSelected: speciesId || undefined,
+                }
+            });
 
-    //   useEffect(() => {
-    //     api.get("/public/shared-safari")
-    //       .then(res => {
-    //         setSafari(res.data.data[0]); // 👈 slug yahin se
-    //         // console.log("Slug from API:", res.data.data[0].slug);
-    //       })
-    //       .catch(console.error);
-    //   }, []);
+            const uniqueSafaris = Array.from(
+                new Map(
+                    (res.data?.data || []).map(item => [
+                        item.id || item.shared_safari_id,
+                        item
+                    ])
+                ).values()
+            );
 
-    //   if (!safari) return <p>Loading...</p>;
+            setCards(uniqueSafaris);
+            setLastPage(res.data?.last_page || 1);
 
+            setTotalCount(res.data?.total || 0);
+
+        } catch (err) {
+            console.error("API ERROR:", err);
+            setCards([]);
+            setTotalCount(0);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchSafaris(
+            page,
+            selectedState?.value || null,
+            selectedPark?.value || null,
+            selectedSpecies?.value || null
+        );
+    }, [page, selectedState, selectedPark, selectedSpecies]);
+
+
+    const handleStateChange = (state) => {
+        console.log("State Changed:", state);
+        setSelectedState(state);
+        setPage(1);
+    };
+
+    const handleparkChange = (park) => {
+        console.log("Park Changed:", park);
+        setSelectedPark(park);
+        setPage(1);
+    };
+
+    const handleSpeciesChange = (species) => {
+        console.log("Species Changed:", species);
+        setSelectedSpecies(species);
+        setPage(1);
+    };
+
+    const clearParkFilter = () => {
+        setSelectedPark(null);
+        setPage(1);
+    };
+    const clearStateFilter = () => {
+        setSelectedState(null);
+        setPage(1);
+    }
+    const clearSpeciesFilter = () => {
+        setSelectedSpecies(null);
+        setPage(1);
+    };
+    const clearAllFilters = () => {
+        setSelectedState(null);
+        setSelectedPark(null);
+        setPage(1);
+    };
+
+
+    const handlePageChange = (pageNo) => {
+        setPage(pageNo);
+    };
+    const visibleCount = 3;
+    const getPageNumbers = () => {
+        let start = Math.max(1, page - 1);
+        let end = start + visibleCount - 1;
+
+        if (end > lastPage) {
+            end = lastPage;
+            start = Math.max(1, end - visibleCount + 1);
+        }
+
+        const pages = [];
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+        return pages;
+    };
+    const bestTime = location.pathname === "/safari-packages";
     return (
         <>
             <div>
@@ -37,12 +129,22 @@ export default function SharedSafari() {
             {/* Join Shared Safari Section  */}
             <div className="container-lg container-inner-padding">
                 <Row className=" g-3 position-relative mb-5" style={{ minHeight: "100vh" }}>
-                    <Aside />
+                    <Aside
+                        selectedState={selectedState}
+                        selectedPark={selectedPark}
+                        selectedSpecies={selectedSpecies}
+                        onStateChange={handleStateChange}
+                        onParkChange={handleparkChange}
+                        onSpeciesChange={handleSpeciesChange}
+                    />
                     <Col xs={12} lg={9} className="main-content-scroll">
                         <div className="filter-applied-container">
                             <div className="d-sm-flex align-items-center justify-content-between mb-2 flex-wrap">
                                 <div className="what's-found mb-lg-0 mb-3">
-                                    <p className="mb-0">We found <b>7937</b> Active Shared Safari</p>
+                                    <p className="mb-0">
+                                        We found <b>{totalCount}</b> Active Shared Safari
+                                    </p>
+
                                 </div>
                                 <div className="d-lg-inline-block d-flex align-items-center justify-content-between mb-3">
                                     <div className="sort-by mb-sm-0">
@@ -67,70 +169,122 @@ export default function SharedSafari() {
                                 </div>
                             </div>
                             <div className="select-filter-box d-flex align-items-center gap-2 flex-wrap mb-2">
-                                <div className="filter-options rounded-pill bg-accent d-inline-block px-3 py-1">
-                                    <p className="text-white mb-0">Premium
-                                        <a href="javascript:void(0)" className="text-decoration-none">
-                                            <i className="fa-solid fa-xmark text-white ps-1"></i>
-                                        </a>
-                                    </p>
-                                </div>
-                                <div className="filter-options rounded-pill bg-accent d-inline-block px-3 py-1">
-                                    <p className="text-white mb-0">Standard
-                                        <a href="javascript:void(0)" className="text-decoration-none">
-                                            <i className="fa-solid fa-xmark text-white ps-1"></i>
-                                        </a>
-                                    </p>
-                                </div>
+                                {selectedState && (
+                                    <div className="filter-options rounded-pill bg-accent d-inline-block px-3 py-1">
+                                        <p className="text-white mb-0">
+                                            {selectedState.label}
+                                            <a
+                                                href="#"
+                                                className="text-decoration-none"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    clearStateFilter();
+                                                }}
+                                            >
+                                                <i className="fa-solid fa-xmark text-white ps-1"></i>
+                                            </a>
+                                        </p>
+                                    </div>
+                                )}
 
-                                <div className="clear-all-btn">
-                                    <a href="javascript:void(0)" className="text-decoration-none text-blue">Clear All</a>
-                                </div>
+                                {selectedPark && (
+                                    <div className="filter-options rounded-pill bg-accent d-inline-block px-3 py-1">
+                                        <p className="text-white mb-0">
+                                            {selectedPark.label}
+                                            <a
+                                                href="#"
+                                                className="text-decoration-none"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    clearParkFilter();
+                                                }}
+                                            >
+                                                <i className="fa-solid fa-xmark text-white ps-1"></i>
+                                            </a>
+                                        </p>
+                                    </div>
+                                )}
+                                {selectedSpecies && (
+                                    <div className="filter-options rounded-pill bg-accent d-inline-block px-3 py-1">
+                                        <p className="text-white mb-0">
+                                            {selectedSpecies.label}
+                                            <a
+                                                href="#"
+                                                className="text-decoration-none"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    clearSpeciesFilter();
+                                                }}
+                                            >
+                                                <i className="fa-solid fa-xmark text-white ps-1"></i>
+                                            </a>
+                                        </p>
+                                    </div>
+                                )}
+                                {(selectedState || selectedPark || selectedSpecies) && (
+                                    <button
+                                        className="clear-all-btn p-0 border-0 bg-transparent text-decoration-none text-blue"
+                                        onClick={clearAllFilters}
+                                    >
+                                        Clear All
+                                    </button>
+                                )}
                             </div>
+
                         </div>
                         <section id="join-shared-safari" className="mb-md--5 mb--3 pb--1">
                             <div className="card-container row align-items-center  gx-3">
-                                {/* <Col xl={4} sm={6} className=" join-safari-card-box mt-3 rounded-3"> */}
-                                <SafariCard />
-                                {/* </Col> */}
+                                {cards.length === 0 ? (
+                                    <p>No safari found</p>
+                                ) : (
+                                    cards.map(item => (
+                                        <SafariCard
+                                            key={item.id || item.shared_safari_id}
+                                            item={item}
+                                        />
+                                    ))
+                                )}
 
-                                {/* <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <SafariCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <SafariCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <SafariCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <SafariCard />
-                                </div>
-
-                                <div className="col-xl-4 col-sm-6 join-safari-card-box mt-3 rounded-3">
-                                    <SafariCard />
-                                </div> */}
-
-
-                                {/* <div className="col-12 text-center mt-4 pt-2">
-                                    <a href="javascript:void(0)"
-                                        className="text-decoration-none btn-primary blue-btn-hover rounded-1 btn-sm border-0 px-3">
-                                        Load More
-                                    </a>
-                                </div> */}
                             </div>
+                            {!bestTime && (
+                                <Col xs={12} className=" d-flex justify-content-center align-items-center mt-4 pt-2 gap-2" wire:key="pagination">
+                                    <button
+                                        className=" prev-btn btn-sm "
+                                        disabled={page === 1}
+                                        onClick={() => setPage(p => p - 1)}>
+                                        <i className="fas fa-chevron-left"></i> Previous
+                                    </button>
+                                    {getPageNumbers().map(num => (
+                                        <button
+                                            key={num}
+                                            className={`page-btn page btn-sm  ${page === num ? "disabled" : ""}`}
+                                            // className={page === num ? " active" : ""}
+                                            onClick={() => setPage(num)}
+                                        >
+                                            {num}
+                                        </button>
+                                    ))}
+
+
+                                    <button
+                                        className="page next-btn btn-sm "
+                                        disabled={page === lastPage}
+                                        onClick={() => setPage(p => p + 1)}>
+                                        Next<i className="fas fa-chevron-right"></i>
+                                    </button>
+                                </Col>
+                            )}
                         </section>
 
                         {/* Top Rated Park   */}
                         <TopRated />
                     </Col>
+
                 </Row>
             </div>
             <Footer />
 
         </>
     );
-
 }
+export default SharedSafari;

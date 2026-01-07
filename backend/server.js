@@ -44,6 +44,18 @@ app.get("/public/species/bengal-tiger", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch species data" });
   }
 });
+app.get("/public/get-filters", async (req, res) => {
+  try{
+    const response  = await axios.get(
+      `${process.env.API_BASE_URL}/public/get-filters`
+    );
+  
+    res.json(response.data)
+  } catch {
+    res.status(500).json({ message: "Failed to fetch species data"})
+  }
+
+});
 app.get("/public/species/tabs/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -72,14 +84,27 @@ app.get("/public/species/tabs/:id", async (req, res) => {
 });
 app.get("/public/shared-safari", async (req, res) => {
   try {
+    const { page, state_id } = req.query;
+
     const response = await axios.get(
-      `${process.env.API_BASE_URL}/public/shared-safari`
+      `${process.env.API_BASE_URL}/public/shared-safari`,
+      {
+        params: {
+          page,
+          stateSelect,
+          parkSelect,
+          speciesSelected
+        }
+      }
     );
+
     res.json(response.data);
-  } catch {
-    res.status(500).json({ message: "Failed to fetch species data" });
+  } catch (error) {
+    console.error("Backend API Error:", error.message);
+    res.status(500).json({ message: "Failed to fetch shared safari data" });
   }
 });
+
 app.get("/public/get-besttime-to-visit", async (req, res) => {
   try {
     const response = await axios.get(
@@ -101,7 +126,7 @@ app.get("/public/get-inclusions", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch species data" });
   }
 });
-app.get("/public/get-inclusions", async (req, res) => {
+app.get("/public/get-themes", async (req, res) => {
   try {
     const response = await axios.get(
       `${process.env.API_BASE_URL}/public/get-themes`
@@ -144,7 +169,7 @@ app.get("/public/state", async (req, res) => {
 app.get("/public/park/species", async (req, res) => {
   try {
     const response = await axios.get(
-      `${process.env.API_BASE_URL}/public/state`
+      `${process.env.API_BASE_URL}/park/species`
     );
     res.json(response.data);
   } catch {
@@ -153,12 +178,55 @@ app.get("/public/park/species", async (req, res) => {
 });
 app.get("/public/get-national-parks", async (req, res) => {
   try {
+
     const response = await axios.get(
       `${process.env.API_BASE_URL}/public/get-national-parks`
+      
     );
     res.json(response.data);
   } catch {
     res.status(500).json({ message: "Failed to fetch species data" });
+  }
+});
+app.get("/public/park", async (req, res) => {
+  try {
+    const { species_id, page } = req.query;
+
+    const response = await axios.get(
+      `${process.env.API_BASE_URL}/public/park`,
+      { params: { species_id, page } }
+    );
+
+    const parks = response.data?.data || [];
+
+    const fixedData = parks.map((park) => {
+      let wildlife = [];
+
+      if (typeof park.famous_for === "string" && park.famous_for.trim()) {
+        // split by " And " OR comma OR period
+        wildlife = park.famous_for
+          .split(/\s+And\s+|,\s*|\.\s*/)
+          .filter(Boolean)
+          .map((name, index) => ({
+            id: index + 1,
+            name: name.trim(),
+          }));
+      }
+
+      return {
+        ...park,
+        wildlife, // ✅ ALWAYS ARRAY
+      };
+    });
+
+    res.json({
+      ...response.data,
+      data: fixedData,
+    });
+
+  } catch (error) {
+    console.error("PARK API ERROR:", error.message);
+    res.status(500).json({ message: "Failed to fetch park data" });
   }
 });
 

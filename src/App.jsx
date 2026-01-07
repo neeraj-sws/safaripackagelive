@@ -57,7 +57,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/safari-packages" element={<SafariPackages />} />
           <Route path="/join-shared-safari" element={<SharedSafari />} />
-          <Route path="/Parkguides" element={<ParkGuides />} />
+          <Route path="/park-guides" element={<ParkGuides />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/privacy-policy" element={<Privacypolicy />} />

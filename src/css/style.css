@@ -1496,8 +1496,11 @@ img.profile-user-icon {
     gap: 0px !important;
 }
 
-i.fa-solid.fa-check.link-text {
-    font-size: 10px;
+i.fa-solid.fa-check {
+    font-size: 10px !important;
+}
+.fa-brands:before, .fa-regular:before, .fa-solid:before, .fa:before, .fab:before, .far:before, .fas:before {
+    content: var(--fa) !important;
 }
 
 /******** guest-reviews *****/
@@ -1745,10 +1748,20 @@ select.form-control {
 
 }
 
-/* .page-btn.disabled, .page-btn:disabled {
-    color: #fff !important;
-    pointer-events: none !important;
-    background-color: #0d6efd !important;
-    border-color: #0d6efd !important;
-    opacity: 0.65;
-} */
+/********* Select Filter Box *********/
+   .select-filter-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap; /* mobile ke liye */
+}
+
+.filter-options {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.clear-all-btn {
+    white-space: nowrap;
+}
