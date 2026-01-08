@@ -53,7 +53,10 @@ navigate(`/species/${species_id}`);
                                 </Placeholder>
                             )}
                             <img
-                                src={data[i].display_image || "/images/placeholder.jpg"}
+                                src={ 
+                                    data[i].display_image 
+                                    ? `${import.meta.env.VITE_API_BASE_URLs}${data[i].display_image}`  
+                                    : data[i].display_image }
                                 alt={data[i].name}
                                 onLoad={() => setImgLoaded(true)}
                                 // onError={(e) => {

@@ -1765,3 +1765,10 @@ select.form-control {
 .clear-all-btn {
     white-space: nowrap;
 }
+
+/*********** Shared Safari *********/
+
+.mb-0.total-safari, .total-seat, .organizer {
+    font: var(--medium-14-text);
+    color: var(--muted-color);
+}

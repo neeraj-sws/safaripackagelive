@@ -20,10 +20,7 @@ const Aside = ({
     const [budge, setBudget] = useState([]);
     const [category, setCategory] = useState([]);
     const [stateOptions, setStateOptions] = useState([]);
-    // const [filterOptions, setFilterOptions] = useState([]);
-    const [park, setPark] = useState(null);
     const [parkoption, setParkoption] = useState([]);
-    const [animal, setAnimal] = useState(null);
     const [species, setSpecies] = useState([]);
 
     const hideStayTheme = location.pathname === "/park-guides";
@@ -35,12 +32,7 @@ const Aside = ({
     const [minPrice, setMinPrice] = useState(MIN);
     const [maxPrice, setMaxPrice] = useState(MAX);
 
-    // const options = stateList.map(st => ({
-    //     value: st.state_id,
-    //     label: st.name,
-    //     fullData: st   // poora object save
-    // }));
-    // const [state, setState] = useState("");
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -124,23 +116,21 @@ const Aside = ({
         // };
 
         const fetchDataspecies = async () => {
-    try {
-        const res = await api.get("/public/park/species");
-        // console.log("RAW SPECIES DATA:", res.data?.data);
-        const data = res.data?.data || [];
-           console.log("FIRST ITEM:", data[0]);
-        const speciesOptions = data.map(item => ({
-            value: item.id,      // ✅ CORRECT FIELD
-            label: item.name,
-        }));
+            try {
+                const res = await api.get("/public/park/species");
+                const data = res.data?.data || [];
+                const speciesOptions = data.map(item => ({
+                    value: item.id,
+                    label: item.name,
+                }));
 
-        setSpecies(speciesOptions);
+                setSpecies(speciesOptions);
 
-    } catch (err) {
-        console.error("API ERROR:", err);
-        setSpecies([]);
-    }
-};
+            } catch (err) {
+                console.error("API ERROR:", err);
+                setSpecies([]);
+            }
+        };
 
         const fetchDatapark = async () => {
             try {
@@ -149,7 +139,7 @@ const Aside = ({
                 const data = res.data?.data || [];
 
                 const Options = data.map(item => ({
-                    value: item.park_id || item.id, // 👈 IMPORTANT
+                    value: item.park_id || item.id, 
                     label: item.name,
                 }));
 
@@ -160,8 +150,6 @@ const Aside = ({
                 setParkoption([]);
             }
         };
-
-
         fetchData();
         fetchDatainclusions();
         fetchDatathemes();
@@ -171,22 +159,6 @@ const Aside = ({
         fetchDataspecies();
         fetchDatapark();
     }, []);
-
-
-    // const onStateChange = (option) => {
-    //     //   setSelectedState(option);
-    // console.log("Selected State ID:", option.value);
-    // console.log("Selected State Name:", option.label);
-    // };
-    const handlespeciesChange = (specie) => {
-        setAnimal(specie);
-        console.log("Selected:", specie);
-    };
-    const handleparkChange = (park) => {
-        setPark(park);
-        console.log("Selected:", park);
-    };
-
 
     return (
         <>
@@ -204,9 +176,11 @@ const Aside = ({
                             <label htmlFor="stateSelect" className="form-label">Select State</label>
                             <Select
                                 className="select-state"
-                                value={selectedState}        
-                                onChange={onStateChange}     
-                                options={stateOptions}     
+                                value={selectedState}
+                                onChange={onStateChange}
+                                options={stateOptions}
+                                closeMenuOnSelect={true}
+                                blurInputOnSelect={false}
                                 placeholder="Select State"
                             />
                         </div>
@@ -295,7 +269,7 @@ const Aside = ({
                                     onChange={onSpeciesChange}
                                     closeMenuOnSelect={true}
                                     blurInputOnSelect={false}
-                                    placeholder="Select State"
+                                    placeholder="Select an Option"
                                 />
 
                             </div>

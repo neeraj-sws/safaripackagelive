@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import Header from '../Components/Layout/Header';
 import Footer from '../Components/Layout/Footer';
 import SafariCard from '../Components/Comman/SafariCard';
@@ -62,13 +62,13 @@ const SharedSafari = () => {
 
 
     const handleStateChange = (state) => {
-        console.log("State Changed:", state);
+        // console.log("State Changed:", state);
         setSelectedState(state);
         setPage(1);
     };
 
     const handleparkChange = (park) => {
-        console.log("Park Changed:", park);
+        // console.log("Park Changed:", park);
         setSelectedPark(park);
         setPage(1);
     };

@@ -93,7 +93,7 @@ app.get("/public/shared-safari", async (req, res) => {
           page,
           stateSelect,
           parkSelect,
-          speciesSelected
+          speciesSelected,
         }
       }
     );
@@ -105,6 +105,18 @@ app.get("/public/shared-safari", async (req, res) => {
   }
 });
 
+app.get("/public/safari-package", async (req, res) => {
+  try{
+    const response  = await axios.get(
+      `${process.env.API_BASE_URL}/public/safari-package`
+    );
+  
+    res.json(response.data)
+  } catch {
+    res.status(500).json({ message: "Failed to fetch species data"})
+  }
+
+});
 app.get("/public/get-besttime-to-visit", async (req, res) => {
   try {
     const response = await axios.get(
