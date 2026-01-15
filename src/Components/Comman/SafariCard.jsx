@@ -5,213 +5,224 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import api from '../../api/api';
-const SafariCard = ({ item, pkg }) => {
-    // console.log("SafariCard item:", item);
-    console.log("SafariCard pkg:", pkg);
-    // console.log("PARK WILDLIFE:", park?.wildlife);
+export default function SafariCard() {
+    const [list, setList] = useState([]);
+    const [tabs, setTabs] = useState([]);
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+    const PER_PAGE = 9;
+    //    const lastPage = 794; // API se aata hai
+    const visibleCount = 3;
 
     useEffect(() => {
-        console.log("SafariCard pkg:", pkg);
-        if (!pkg || !Array.isArray(pkg.park.wildlife)) {
-            console.log("Wildlife abhi nahi aaya");
-            return;
+        api.get("/public/shared-safari", {
+            params: {
+                page: page,
+                per_page: PER_PAGE
+            }
+        })
+            .then(res => {
+                setTabs(res.data?.data || []);
+                setLastPage(res.data?.last_page || 1);
+            })
+            .catch(err => {
+                console.error("API ERROR:", err);
+                setTabs([]);
+            });
+    }, [page]);
+
+    useEffect(() => {
+        const temp = [];
+
+        for (let i = 0; i < list.length; i++) {
+            temp.push(list[i]);
         }
 
-        pkg.park.wildlife.forEach((w, index) => {
-            console.log(`Species ${index}:`, w.species?.name);
-        });
+        setTabs(temp);
+    }, [list]);
 
-    }, [pkg]);
+    const getPageNumbers = () => {
+        let start = Math.max(1, page - 1);
+        let end = start + visibleCount - 1;
 
-    const navigate = useNavigate();
+        if (end > lastPage) {
+            end = lastPage;
+            start = Math.max(1, end - visibleCount + 1);
+        }
+
+        const pages = [];
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+        return pages;
+    };
+
     const location = useLocation();
+    const navigate = useNavigate();
 
-    // const imageUrl =
-    //     park?.display_image
-    //         ? `${import.meta.env.VITE_API_BASE_URLs}${park.display_image}`
-    //         : item?.display_image
-    //             ? `${import.meta.env.VITE_API_BASE_URLs}/assets/images/GPT-1.png`
-    //             : null;
-    const imageUrl =
-        pkg?.display_image
-            ? pkg.display_image
-                ? pkg.display_image
-                : `${import.meta.env.VITE_API_BASE_URLs}${pkg.display_image}`
-            : item?.display_image
-                ? item.display_image
-                : `${import.meta.env.VITE_API_BASE_URLs}/assets/images/GPT-1.png`;
-
-    console.log("Image URL:", imageUrl);
-    const formatSlug = (slug = "") =>
-        slug
-            .replace(/-/g, " ")
-            .replace(/\b\w/g, ch => ch.toUpperCase());
-
-    const title = pkg?.slug
-        ? formatSlug(
-            pkg.slug.length > 20
-                ? pkg.slug.slice(0, 20) + "..."
-                : pkg.slug
-        )
-        : item?.slug
-            ? formatSlug(item.slug)
-            : "";
-
-
-    // console.log("Title:", title);
-    const shortTitle =
-        pkg?.park?.name
-            ? pkg.park.name.length > 30
-                ? pkg.park.name.slice(0, 30) + "..."
-                : pkg.park.name
-            : item?.park?.name
-                ? item.park.name.length > 30
-                    ? item.park.name.slice(0, 30) + "..."
-                    : item.park.name
-                : "";
-
-
-    // console.log("Short Title:", shortTitle);
-    // console.log("Location Pathname:", location.pathname);
-    // console.log("Park:", park);
-    // console.log("park?.name:", park?.park?.name);
-
-    const priceRange =
-    pkg?.min_price_pp && pkg?.max_price_pp
-        ? `₹${pkg.min_price_pp} - ₹${pkg.max_price_pp}`
-        : item?.min_price_pp && item?.max_price_pp
-            ? `₹${item.min_price_pp} - ₹${item.max_price_pp}`
-            : "";
-    console.log("Price Range:", priceRange);
-    // const package_image = location.pathname === "/safari-packages";
-    // const sharedsafari_image = location.pathname === "";
-    // if (!item) return null;
-    // if (!park) return null;
-
+    let showButton = false;
     let buttonText = "";
     let navigateTo = "";
 
-    if (location.pathname === "/join-shared-safari") {
-        buttonText = "View Detail";
-        navigateTo = "/SafariDetail";
+    switch (location.pathname) {
+        case "/":
+            showButton = true;
+            buttonText = "Join Safari";
+            navigateTo = "/SafariDetail";
+            break;
+
+        case "/join-shared-safari":
+            showButton = true;
+            buttonText = " View Detail ";
+            navigateTo = "/SafariDetail";
+            break;
+
+        case "/safari-packages":
+            showButton = true;
+            buttonText = "Enquire Now";
+            navigateTo = "/PackagesDetail";
+            break;
+
+        case "/SafariDetail":
+            showButton = true;
+            buttonText = "Enquire Now";
+            navigateTo = "/SafariDetail";
+            break;
+
+        case "/PackagesDetail":
+            showButton = true;
+            buttonText = "Enquire Now";
+            navigateTo = "/PackagesDetail";
+            break;
+
+
+
+        default:
+            showButton = true;
+            buttonText = "Enquire ";
+            navigateTo = "/PackagesDetail";
     }
-    if (location.pathname === "/safari-packages") {
-        buttonText = "View Detail";
+    const currentPath = location.pathname;
+    const { pathname } = location;
+
+    if (pathname === `/species-detail/packages`) {
+        showButton = true;
+        buttonText = "Enquire Now";
         navigateTo = "/PackagesDetail";
     }
 
+    if (pathname === '/species-detail/species-safaris') {
+        showButton = true;
+        buttonText = "Join Safari";
+        navigateTo = "/SafariDetail";
+    }
+
+    if (pathname === "/park-detail/park-package") {
+        showButton = true;
+        buttonText = "Enquire Now";
+        navigateTo = "/PackagesDetail";
+    }
+    if (pathname === '/park-detail/park-safari') {
+        showButton = true;
+        buttonText = "Join Safari";
+        navigateTo = "/SafariDetail";
+    }
+    const bestTime = location.pathname === "/safari-packages";
     return (
         <>
-            <Col xl={4} sm={6} className="join-safari-card-box mt-3 rounded-3">
-                <Card className="rounded-3">
-                    <img src={imageUrl} alt="Safari" style={{ height: "220px", objectFit: "cover" }}></img>
-                    <Card.Body className="p-0 border-bottom">
-                        <div className="card-body-inner border-bottom p-0">
-                            <div className="card-title border-bottom p-2">
-                                <div className="d-flex align-items-center justify-content-between">
-                                    <h4 className="mb-0 card-text">
-                                        {title}
-                                    </h4>
-                                </div>
-                                <div className="cityplace-text">
-                                    <span>
-                                        {shortTitle}
-                                    </span>
-                                </div>
-                            </div>
-                            {pkg && (
-                                <div className="card-text px-2">
-                                    {/*  Highlights partition  */}
-                                    <div>
-                                        <ul className="highlights highlights-grid knowfor-list ps-0 d-flex flex-wrap align-items-center">
-                                            <li className="card-list-text d-flex align-items-center gap-1 mb-md-0 mb-1">
-                                                <i style={{ fontSize: "10px" }} className="fas fa-home" aria-hidden="true"></i>
-                                                <p className="mb-0 text-truncate">
-                                                    3N Stay in jungle lodge</p>
-                                            </li>
-                                            <li className="card-list-text d-flex align-items-center gap-1 mb-md-0 mb-1">
-                                                <i style={{ fontSize: "10px" }} className="fas fa-utensils" aria-hidden="true"></i>
-                                                <p className="mb-0 text-truncate">
-                                                    All Meals (B/L/D)</p>
-                                            </li>
-                                            <li className="card-list-text d-flex align-items-center gap-1 mb-md-0 mb-1">
-                                                <i style={{ fontSize: "10px" }} className="fas fa-credit-card" aria-hidden="true"></i>
-                                                <p className="mb-0 text-truncate">
-                                                    Entry Pass</p>
-                                            </li>
-                                            <li className="card-list-text d-flex align-items-center gap-1 mb-md-0 mb-1">
-                                                <i style={{ fontSize: "10px" }} className="fab fa-adversal" aria-hidden="true"></i>
-                                                <p className="mb-0 text-truncate">
-                                                    Demo Inclusion</p>
-                                            </li>
-                                        </ul>
+            {/* Join Shared Safari Section  */}
+            {tabs.length === 0 && <p>No data found</p>}
+
+            {tabs.map((item, index) => (
+                <Col xl={4} sm={6} className=" join-safari-card-box mt-3 rounded-3" key={index}>
+                    <Card className=" rounded-3" id="Card_Img">
+                        {/* Card Image  */}
+                        <img className="card-img-top rounded-top-3" src={item.display_image}
+                            alt="Card image" style={{ width: "100%", objectFit: "cover", height: "220px" }} />
+                        <Card.Body className="p-0 border-bottom">
+
+                            <div className="card-body-inner border-bottom p-0">
+                                <div className="card-title border-bottom p-2">
+                                    <div className="d-flex align-items-center justify-content-between">
+                                        <h4 className="mb-0 card-text">
+                                            {item.slug}
+                                        </h4>
                                     </div>
-                                    {/*  Known for partition  */}
-                                    <div className="knowfor-list mt-2 mb-1">
-                                        <h6 className="mb-1">Known For:</h6>
-                                        <ul className="highlights highlights-grid knowfor-list ps-0 d-flex flex-wrap align-items-center">
-                                            {pkg?.park?.wildlife?.map((w, index) => (
-                                                <li className="card-list-text d-flex align-items-center gap-1 mb-md-0 mb-1" key={index}>
-                                                    <i className="fa fa-circle" style={{ fontSize: "6px" }} aria-hidden="true"></i>
-                                                    <p className="mb-0 text-truncate"  >
-                                                        {w.species?.name}
-                                                    </p>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                    <div className="cityplace-text">
+                                        <span>
+                                            {item.park.name.length > 30
+                                                ? item.park.name.slice(0, 30) + "..."
+                                                : item.park.name}
+                                        </span>
                                     </div>
                                 </div>
-                            )}
-                            {item && (
                                 <div className="card-text p-2">
+                                    {/* Highlights partition  */}
                                     <div className="d-flex justify-content-between">
                                         <div className="text-center">
-                                            <p className="mb-0 total-safari">Safari</p>
-                                            <p className="mb-0 total-safari-in-number">
-                                                {item.no_of_safari}
-                                            </p>
+                                            <p className="mb-0 total-safari">safari</p>
+                                            <p className="mb-0 total-safari-in-number">{item.no_of_safari}</p>
                                         </div>
-
                                         <div className="text-center">
                                             <p className="mb-0 total-seat">Seats</p>
-                                            <p className="mb-0 total-seat-in-number">
-                                                {item.share_seats}
-                                            </p>
+                                            <p className="mb-0 total-seat-in-number">{item.share_seats}</p>
                                         </div>
-
                                         <div className="text-center">
                                             <p className="mb-0 organizer">Organized by</p>
-                                            <p className="mb-0 organizer_name">
-                                                {item.organizer_name || "-"}
-                                            </p>
+                                            <p className="mb-0 organizer_name"></p>
                                         </div>
                                     </div>
                                 </div>
-                            )}
-                        </div>
-                        <div className="card-body-inner price-container flex-wrap p-0">
-                            
+                            </div>
+                            <div className="card-body-inner price-container flex-wrap p-0">
                                 <div className="starting-price d-flex align-items-center justify-content-between border-bottom p-2">
                                     <p className="mb-0"> Price:</p>
-                                    <span className="mb-0 text-muted">{priceRange}</span>
+                                    <span className="mb-0 text-muted">₹{item.min_price_pp}-₹{item.max_price_pp}</span>
                                 </div>
-                            
-                            <div className=" my-2 pb-1 text-center">
-                                
-                                <button
-                                    style={{ fontSize: "14px" }}
-                                    onClick={() => navigate(navigateTo)}
-                                    className="btn-sm btn-primary blue-btn-hover border-0 rounded-1" >
-                                    {buttonText}
-                                </button>
+                                <div className=" my-2 pb-1 text-center">
+                                    {showButton && (
+                                        <button
+                                            style={{ fontSize: "14px" }}
+                                            onClick={() => navigate(navigateTo)}
+                                            className="btn-sm btn-primary blue-btn-hover border-0 rounded-1" >
+                                            {buttonText}
+                                        </button>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    </Card.Body>
-                </Card>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            ))}
+            {!bestTime &&(
+            <Col xs={12} className=" d-flex justify-content-center align-items-center mt-4 pt-2 gap-2" wire:key="pagination">
+                <button
+                    className=" prev-btn btn-sm "
+                    disabled={page === 1}
+                    onClick={() => setPage(p => p - 1)}>
+                    <i className="fas fa-chevron-left"></i> Previous
+                </button>
+                {getPageNumbers().map(num => (
+                    <button
+                        key={num}
+                        className={`page-btn page btn-sm  ${page === num ? "disabled" : ""}`}
+                        // className={page === num ? " active" : ""}
+                        onClick={() => setPage(num)}
+                    >
+                        {num}
+                    </button>
+                ))}
+
+
+                <button
+                    className="page next-btn btn-sm "
+                    disabled={page === lastPage}
+                    onClick={() => setPage(p => p + 1)}>
+                    Next<i className="fas fa-chevron-right"></i>
+                </button>
             </Col>
+            )}
         </>
     );
-};
 
-export default SafariCard;
-
+}

@@ -87,36 +87,16 @@ app.get("/public/shared-safari", async (req, res) => {
     const { page, state_id } = req.query;
 
     const response = await axios.get(
-      `${process.env.API_BASE_URL}/public/shared-safari`,
-      {
-        params: {
-          page,
-          stateSelect,
-          parkSelect,
-          speciesSelected,
-        }
-      }
+      `${process.env.API_BASE_URL}/public/shared-safari`
     );
 
     res.json(response.data);
-  } catch (error) {
-    console.error("Backend API Error:", error.message);
-    res.status(500).json({ message: "Failed to fetch shared safari data" });
-  }
-});
-
-app.get("/public/safari-package", async (req, res) => {
-  try{
-    const response  = await axios.get(
-      `${process.env.API_BASE_URL}/public/safari-package`
-    );
-  
-    res.json(response.data)
   } catch {
-    res.status(500).json({ message: "Failed to fetch species data"})
+    res.status(500).json({ message: "Failed to fetch species data" });
   }
 
 });
+
 app.get("/public/get-besttime-to-visit", async (req, res) => {
   try {
     const response = await axios.get(

@@ -19,7 +19,10 @@ const Aside = ({
     const [themes, setThemes] = useState([]);
     const [budge, setBudget] = useState([]);
     const [category, setCategory] = useState([]);
-    const [stateOptions, setStateOptions] = useState([]);
+    // const [tour, setTour] = useState([]);
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [options, setOptions] = useState([]);
+    const [park, setPark] = useState(null);
     const [parkoption, setParkoption] = useState([]);
     const [species, setSpecies] = useState([]);
 
@@ -33,6 +36,7 @@ const Aside = ({
     const [maxPrice, setMaxPrice] = useState(MAX);
 
 
+    // const [state, setState] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -118,28 +122,29 @@ const Aside = ({
         const fetchDataspecies = async () => {
             try {
                 const res = await api.get("/public/park/species");
+                // console.log(res.data.data);
                 const data = res.data?.data || [];
-                const speciesOptions = data.map(item => ({
-                    value: item.id,
+
+                const mappedOptions = data.map((item) => ({
+                    // value: item.id,
                     label: item.name,
                 }));
 
-                setSpecies(speciesOptions);
+                setSpecies(mappedOptions);
 
             } catch (err) {
                 console.error("API ERROR:", err);
                 setSpecies([]);
             }
         };
-
         const fetchDatapark = async () => {
             try {
                 const res = await api.get("/public/get-national-parks");
                 // console.log("Raw park data:", res.data?.data);
                 const data = res.data?.data || [];
 
-                const Options = data.map(item => ({
-                    value: item.park_id || item.id, 
+                const mappedOptions = data.map((item) => ({
+                    // value: item.id,
                     label: item.name,
                 }));
 
@@ -150,6 +155,8 @@ const Aside = ({
                 setParkoption([]);
             }
         };
+
+
         fetchData();
         fetchDatainclusions();
         fetchDatathemes();
@@ -159,6 +166,31 @@ const Aside = ({
         fetchDataspecies();
         fetchDatapark();
     }, []);
+
+    // const options = [
+    //     { state.name },
+    //     { value: 'strawberry', label: 'Strawberry' },
+    //     { value: 'vanilla', label: 'Vanilla' },
+    // ];
+
+
+    // const handleChange = (option) => {
+    //     setState(option.value);
+    //     setSelectedOption(option);
+    // }
+    const handleChange = (option) => {
+        setSelectedOption(option);
+        console.log("Selected:", option);
+    };
+    const handlespeciesChange = (specie) => {
+        setAnimal(specie);
+        console.log("Selected:", specie);
+    };
+    const handleparkChange = (park) => {
+        setPark(park);
+        console.log("Selected:", park);
+    };
+
 
     return (
         <>
@@ -176,11 +208,12 @@ const Aside = ({
                             <label htmlFor="stateSelect" className="form-label">Select State</label>
                             <Select
                                 className="select-state"
-                                value={selectedState}
-                                onChange={onStateChange}
-                                options={stateOptions}
-                                closeMenuOnSelect={true}
+                                value={selectedOption}
+                                onChange={handleChange}
+                                options={options}
+                                closeMenuOnSelect={false}
                                 blurInputOnSelect={false}
+                                // menuIsOpen={true}
                                 placeholder="Select State"
                             />
                         </div>
@@ -269,7 +302,8 @@ const Aside = ({
                                     onChange={onSpeciesChange}
                                     closeMenuOnSelect={true}
                                     blurInputOnSelect={false}
-                                    placeholder="Select an Option"
+                                    // menuIsOpen={true}
+                                    placeholder="Select State"
                                 />
 
                             </div>

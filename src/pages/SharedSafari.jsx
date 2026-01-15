@@ -9,115 +9,23 @@ import Aside from '../Components/Comman/aside';
 import TopRated from '../Components/Comman/TopRated';
 import CommanBanner from "../Components/Comman/CommanBanner";
 import api from '../api/api';
-const SharedSafari = () => {
-    const [selectedState, setSelectedState] = useState(null);
-    const [selectedPark, setSelectedPark] = useState(null);
-    const [selectedSpecies, setSelectedSpecies] = useState(null);
-    const [totalCount, setTotalCount] = useState(0);
-    const [cards, setCards] = useState([]);
-    const [page, setPage] = useState(1);
-    const [lastPage, setLastPage] = useState(1);
+export default function SharedSafari() {
 
-    const fetchSafaris = async (pageNo = 1, stateId = null, parkId = null, speciesId = null) => {
-        try {
-            const res = await api.get("/public/shared-safari", {
-                params: {
-                    page: pageNo,
-                    stateSelect: stateId || undefined,
-                    parkSelect: parkId || undefined,
-                    speciesSelected: speciesId || undefined,
-                }
-            });
+    //  const { slug } = useParams()
+    // const [tabs, setTabs] = useState([]);
+    //  const [safari, setSafari] = useState(null);
 
-            const uniqueSafaris = Array.from(
-                new Map(
-                    (res.data?.data || []).map(item => [
-                        item.id || item.shared_safari_id,
-                        item
-                    ])
-                ).values()
-            );
+    //   useEffect(() => {
+    //     api.get("/public/shared-safari")
+    //       .then(res => {
+    //         setSafari(res.data.data[0]); // 👈 slug yahin se
+    //         // console.log("Slug from API:", res.data.data[0].slug);
+    //       })
+    //       .catch(console.error);
+    //   }, []);
 
-            setCards(uniqueSafaris);
-            setLastPage(res.data?.last_page || 1);
+    //   if (!safari) return <p>Loading...</p>;
 
-            setTotalCount(res.data?.total || 0);
-
-        } catch (err) {
-            console.error("API ERROR:", err);
-            setCards([]);
-            setTotalCount(0);
-        }
-    };
-
-
-    useEffect(() => {
-        fetchSafaris(
-            page,
-            selectedState?.value || null,
-            selectedPark?.value || null,
-            selectedSpecies?.value || null
-        );
-    }, [page, selectedState, selectedPark, selectedSpecies]);
-
-
-    const handleStateChange = (state) => {
-        // console.log("State Changed:", state);
-        setSelectedState(state);
-        setPage(1);
-    };
-
-    const handleparkChange = (park) => {
-        // console.log("Park Changed:", park);
-        setSelectedPark(park);
-        setPage(1);
-    };
-
-    const handleSpeciesChange = (species) => {
-        console.log("Species Changed:", species);
-        setSelectedSpecies(species);
-        setPage(1);
-    };
-
-    const clearParkFilter = () => {
-        setSelectedPark(null);
-        setPage(1);
-    };
-    const clearStateFilter = () => {
-        setSelectedState(null);
-        setPage(1);
-    }
-    const clearSpeciesFilter = () => {
-        setSelectedSpecies(null);
-        setPage(1);
-    };
-    const clearAllFilters = () => {
-        setSelectedState(null);
-        setSelectedPark(null);
-        setPage(1);
-    };
-
-
-    const handlePageChange = (pageNo) => {
-        setPage(pageNo);
-    };
-    const visibleCount = 3;
-    const getPageNumbers = () => {
-        let start = Math.max(1, page - 1);
-        let end = start + visibleCount - 1;
-
-        if (end > lastPage) {
-            end = lastPage;
-            start = Math.max(1, end - visibleCount + 1);
-        }
-
-        const pages = [];
-        for (let i = start; i <= end; i++) {
-            pages.push(i);
-        }
-        return pages;
-    };
-    const bestTime = location.pathname === "/safari-packages";
     return (
         <>
             <div>
